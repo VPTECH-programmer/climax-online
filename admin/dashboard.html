@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — Climax Online</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--blue:#2563eb;--blue-d:#1d4ed8;--blue-l:#eff6ff;--blue-t:#dbeafe;--navy:#0f172a;--gray50:#f8fafc;--gray100:#f1f5f9;--gray200:#e2e8f0;--gray400:#94a3b8;--gray600:#475569;--gray800:#1e293b;--red:#ef4444;--green:#16a34a;--gold:#f59e0b;--r:10px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:var(--gray50);color:var(--gray800);min-height:100vh;font-size:13.5px}
+    .hdr{background:var(--navy);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,0.3)}
+    .hdr-logo{font-family:'DM Serif Display',serif;color:#fff;font-size:19px}
+    .hdr-logo span{color:var(--gold);font-size:11px;display:block;font-family:'DM Sans',sans-serif;font-weight:500}
+    .hdr-actions{display:flex;gap:8px;align-items:center}
+    .btn{padding:7px 14px;border-radius:7px;border:none;cursor:pointer;font-size:12.5px;font-weight:600;font-family:'DM Sans',sans-serif;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+    .btn-danger{background:#fef2f2;color:var(--red);border:1px solid #fecaca}.btn-danger:hover{background:var(--red);color:#fff}
+    .btn-success{background:#f0fdf4;color:var(--green);border:1px solid #bbf7d0}.btn-success:hover{background:var(--green);color:#fff}
+    .btn-ghost{background:rgba(255,255,255,0.1);color:#fff}.btn-ghost:hover{background:rgba(255,255,255,0.2)}
+    .btn-sm{padding:5px 10px;font-size:11.5px}
+    .wrap{max-width:1200px;margin:0 auto;padding:20px}
+    .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+    .stat-card{background:#fff;border-radius:var(--r);padding:14px;border:1px solid var(--gray200);text-align:center}
+    .stat-card .n{font-family:'DM Serif Display',serif;font-size:26px;color:var(--navy);display:block}
+    .stat-card .l{font-size:10.5px;color:var(--gray400);font-weight:600;text-transform:uppercase;letter-spacing:0.4px;margin-top:2px}
+    .layout{display:grid;grid-template-columns:1fr 370px;gap:20px;align-items:start}
+    .form-panel{background:#fff;border-radius:var(--r);border:1px solid var(--gray200);overflow:hidden}
+    .form-panel-hdr{background:linear-gradient(135deg,var(--navy),#1e3a5f);padding:16px 20px;color:#fff}
+    .form-panel-hdr h2{font-family:'DM Serif Display',serif;font-size:17px}
+    .form-panel-hdr p{font-size:11px;color:#bfdbfe;margin-top:2px}
+    .form-body{padding:20px}
+    .fsec{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--gray100)}
+    .fsec:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+    .fsec-title{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+    .fsec-title::before{content:'';display:block;width:3px;height:14px;background:var(--blue);border-radius:2px}
+    .fgrp{margin-bottom:11px}
+    label{display:block;font-size:11px;font-weight:600;color:var(--gray600);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.3px}
+    input[type=text],input[type=url],select,textarea{width:100%;padding:9px 11px;border:1.5px solid var(--gray200);border-radius:7px;font-size:13px;outline:none;transition:border 0.2s;font-family:'DM Sans',sans-serif;color:var(--gray800);background:#fff}
+    input:focus,select:focus,textarea:focus{border-color:var(--blue);background:#fafcff}
+    textarea{resize:vertical}
+    .frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+    .hint{font-size:11px;color:var(--gray400);margin-top:3px}
+    .dyn-table{width:100%;border-collapse:collapse;margin-top:6px}
+    .dyn-table th{font-size:11px;font-weight:600;color:var(--gray600);padding:6px 8px;background:var(--gray50);border:1px solid var(--gray200);text-align:left}
+    .dyn-table td{padding:4px 5px;border:1px solid var(--gray200)}
+    .dyn-table input{border:none;padding:5px 6px;font-size:12.5px;width:100%;background:transparent;outline:none;font-family:'DM Sans',sans-serif}
+    .dyn-table input:focus{background:var(--blue-l);border-radius:4px}
+    .del-row{background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:4px;font-family:sans-serif}
+    .del-row:hover{background:#fef2f2}
+    .add-row-btn{margin-top:7px;padding:6px 12px;background:var(--gray50);border:1.5px dashed var(--gray200);border-radius:6px;font-size:12px;color:var(--gray600);cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;font-weight:600;transition:all 0.2s}
+    .add-row-btn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-l)}
+    .img-tabs{display:flex;gap:6px;margin-bottom:8px}
+    .img-tab{flex:1;padding:6px;border:1.5px solid var(--gray200);border-radius:6px;font-size:12px;font-weight:600;background:#fff;cursor:pointer;color:var(--gray600);text-align:center;transition:all 0.2s}
+    .img-tab.active{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
+    .upload-area{border:2px dashed var(--gray200);border-radius:8px;padding:14px;text-align:center;cursor:pointer;background:var(--gray50);transition:all 0.2s}
+    .upload-area:hover{border-color:#60a5fa;background:var(--blue-l)}
+    .upload-area input{display:none}
+    .img-preview{max-width:100%;border-radius:6px;margin-top:8px;display:none;max-height:100px;object-fit:cover}
+    .submit-row{display:flex;gap:8px;margin-top:14px}
+    .submit-btn{flex:1;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s}
+    .submit-btn:hover{background:var(--blue-d)}
+    .submit-btn:disabled{background:var(--gray400);cursor:not-allowed}
+    .reset-btn{padding:12px 14px;background:var(--gray100);color:var(--gray600);border:1px solid var(--gray200);border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif}
+    .toast{border-radius:7px;padding:9px 13px;font-size:13px;margin-top:10px;display:none;font-weight:600;text-align:center}
+    .toast-ok{background:#f0fdf4;color:var(--green);border:1px solid #bbf7d0}
+    .toast-err{background:#fef2f2;color:var(--red);border:1px solid #fecaca;font-weight:400}
+    .edit-banner{background:linear-gradient(135deg,#fef9c3,#fde68a);border:1px solid #f59e0b;border-radius:7px;padding:9px 13px;font-size:12.5px;color:#92400e;font-weight:600;margin-bottom:12px;display:none}
+    .list-panel{background:#fff;border-radius:var(--r);border:1px solid var(--gray200)}
+    .list-hdr{padding:14px 18px;border-bottom:1px solid var(--gray200);display:flex;align-items:center;justify-content:space-between;position:sticky;top:70px;background:#fff;z-index:10;border-radius:var(--r) var(--r) 0 0}
+    .list-hdr h2{font-family:'DM Serif Display',serif;font-size:16px}
+    .count-badge{background:var(--blue-t);color:var(--blue);padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
+    .filter-bar{padding:10px 14px;border-bottom:1px solid var(--gray100);display:flex;gap:5px;flex-wrap:wrap}
+    .fpill{padding:4px 9px;border-radius:999px;font-size:11.5px;font-weight:600;border:1.5px solid var(--gray200);background:#fff;color:var(--gray600);cursor:pointer;transition:all 0.15s}
+    .fpill.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .post-item{display:flex;gap:10px;align-items:flex-start;padding:11px 15px;border-bottom:1px solid var(--gray100);transition:background 0.15s}
+    .post-item:hover{background:var(--gray50)}
+    .post-thumb{width:58px;height:44px;border-radius:6px;flex-shrink:0;background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden}
+    .post-thumb img{width:58px;height:44px;object-fit:cover;border-radius:6px}
+    .post-info{flex:1;min-width:0}
+    .post-title-text{font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .post-meta-row{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+    .post-date-text{font-size:10.5px;color:var(--gray400)}
+    .post-actions{display:flex;gap:5px;flex-shrink:0;align-items:center}
+    .badge{display:inline-flex;align-items:center;gap:2px;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase}
+    .badge-job{background:#dbeafe;color:#1d4ed8}.badge-result{background:#dcfce7;color:#15803d}
+    .badge-admit{background:#fef9c3;color:#a16207}.badge-answer{background:#fce7f3;color:#be185d}
+    .badge-syllabus{background:#f3e8ff;color:#7c3aed}.badge-news{background:#ffedd5;color:#c2410c}
+    .loading-list{padding:36px;text-align:center;color:var(--gray400)}
+    .loader{width:28px;height:28px;border:3px solid var(--blue-t);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 10px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media(max-width:1000px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}.frow,.frow3{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-logo">Climax Online <span>⚙️ Admin Dashboard</span></div>
+  <div class="hdr-actions">
+    <a href="../index.html" class="btn btn-ghost">🌐 View Site</a>
+    <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="stats">
+    <div class="stat-card"><span class="n" id="s-total">—</span><span class="l">Total Posts</span></div>
+    <div class="stat-card"><span class="n" id="s-jobs">—</span><span class="l">Jobs</span></div>
+    <div class="stat-card"><span class="n" id="s-results">—</span><span class="l">Results</span></div>
+    <div class="stat-card"><span class="n" id="s-admits">—</span><span class="l">Admit Cards</span></div>
+    <div class="stat-card"><span class="n" id="s-others">—</span><span class="l">Others</span></div>
+  </div>
+
+  <div class="layout">
+    <!-- FORM -->
+    <div class="form-panel">
+      <div class="form-panel-hdr">
+        <h2 id="formHeading">➕ Add New Post</h2>
+        <p id="formSub">SarkariResult style — Important Dates, Fee, Links tables</p>
+      </div>
+      <div class="form-body">
+        <div class="edit-banner" id="editBanner">✏️ Editing existing post</div>
+
+        <!-- BASIC -->
+        <div class="fsec">
+          <div class="fsec-title">Basic Information</div>
+          <div class="fgrp"><label>Post Title *</label><input type="text" id="f-title" placeholder="e.g. RRB ALP CEN 01/2026 Online Form"/></div>
+          <div class="frow">
+            <div class="fgrp"><label>Category *</label>
+              <select id="f-cat">
+                <option value="">— Select —</option>
+                <option value="job">💼 Latest Job</option>
+                <option value="result">📊 Result</option>
+                <option value="admit">🪪 Admit Card</option>
+                <option value="answer">🗝️ Answer Key</option>
+                <option value="syllabus">📚 Syllabus</option>
+                <option value="news">📰 News</option>
+              </select>
+            </div>
+            <div class="fgrp"><label>Department / Board</label><input type="text" id="f-dept" placeholder="e.g. Railway Recruitment Board"/></div>
+          </div>
+          <div class="fgrp"><label>Short Description * (WhatsApp share mein jayega)</label><textarea id="f-desc" rows="2" placeholder="2-3 line summary..."></textarea></div>
+          <div class="fgrp"><label>Post Image</label>
+            <div class="img-tabs">
+              <div class="img-tab active" onclick="setImgMode('url')" id="tab-url">🔗 Image URL</div>
+              <div class="img-tab" onclick="setImgMode('upload')" id="tab-upload">📁 Upload</div>
+            </div>
+            <div id="url-mode"><input type="url" id="f-imgurl" placeholder="https://i.imgur.com/..." oninput="previewUrl()"/><div class="hint">💡 imgur.com pe upload karo → link paste karo</div></div>
+            <div id="upload-mode" style="display:none"><div class="upload-area" onclick="document.getElementById('f-file').click()"><input type="file" id="f-file" accept="image/*" onchange="previewFile()"/><div id="uploadTxt">📸 Click to select image</div></div></div>
+            <img id="imgPrev" class="img-preview" alt="Preview"/>
+          </div>
+        </div>
+
+        <!-- VACANCY DETAILS -->
+        <div class="fsec">
+          <div class="fsec-title">Vacancy Details</div>
+          <div class="frow3">
+            <div class="fgrp"><label>Total Posts</label><input type="text" id="f-total" placeholder="e.g. 9144"/></div>
+            <div class="fgrp"><label>Post Name</label><input type="text" id="f-postname" placeholder="e.g. ALP, Technician"/></div>
+            <div class="fgrp"><label>Pay Scale / Salary</label><input type="text" id="f-salary" placeholder="e.g. ₹19900-63200"/></div>
+          </div>
+          <div class="frow3">
+            <div class="fgrp"><label>Age Limit</label><input type="text" id="f-age" placeholder="e.g. 18-33 Years"/></div>
+            <div class="fgrp"><label>Qualification</label><input type="text" id="f-qual" placeholder="e.g. 10th / ITI"/></div>
+            <div class="fgrp"><label>Exam Mode</label><input type="text" id="f-mode" placeholder="e.g. CBT Online"/></div>
+          </div>
+          <div class="fgrp"><label>Last Date (card display ke liye)</label><input type="text" id="f-lastdate" placeholder="e.g. 09 Feb 2026"/></div>
+        </div>
+
+        <!-- IMPORTANT DATES TABLE -->
+        <div class="fsec">
+          <div class="fsec-title">📅 Important Dates Table</div>
+          <table class="dyn-table">
+            <thead><tr><th style="width:55%">Event / Activity</th><th style="width:38%">Date</th><th style="width:7%"></th></tr></thead>
+            <tbody id="dateRows">
+              <tr><td><input type="text" value="Notification Released"/></td><td><input type="text" placeholder="DD Mon YYYY"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>
+              <tr><td><input type="text" value="Apply Online Start"/></td><td><input type="text" placeholder="DD Mon YYYY"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>
+              <tr><td><input type="text" value="Last Date to Apply"/></td><td><input type="text" placeholder="DD Mon YYYY"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>
+              <tr><td><input type="text" value="Fee Payment Last Date"/></td><td><input type="text" placeholder="DD Mon YYYY"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>
+              <tr><td><input type="text" value="Exam Date"/></td><td><input type="text" placeholder="Month YYYY"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>
+            </tbody>
+          </table>
+          <button class="add-row-btn" onclick="addRow('dateRows','text','Event name','DD Mon YYYY')">+ Add Date Row</button>
+        </div>
+
+        <!-- APPLICATION FEE TABLE -->
+        <div class="fsec">
+          <div class="fsec-title">💰 Application Fee Table</div>
+          <table class="dyn-table">
+            <thead><tr><th style="width:60%">Category</th><th style="width:33%">Fee Amount</th><th style="width:7%"></th></tr></thead>
+            <tbody id="feeRows">
+              <tr><td><input type="text" value="General / OBC / EWS"/></td><td><input type="text" placeholder="₹500"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>
+              <tr><td><input type="text" value="SC / ST / PwBD / Female"/></td><td><input type="text" placeholder="₹250"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>
+            </tbody>
+          </table>
+          <button class="add-row-btn" onclick="addRow('feeRows','text','Category','₹000')">+ Add Fee Row</button>
+        </div>
+
+        <!-- IMPORTANT LINKS TABLE -->
+        <div class="fsec">
+          <div class="fsec-title">🔗 Important Links Table</div>
+          <table class="dyn-table">
+            <thead><tr><th style="width:45%">Link Label</th><th style="width:48%">URL</th><th style="width:7%"></th></tr></thead>
+            <tbody id="linkRows">
+              <tr><td><input type="text" value="Apply Online"/></td><td><input type="url" placeholder="https://..."/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>
+              <tr><td><input type="text" value="Download Notification"/></td><td><input type="url" placeholder="https://..."/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>
+              <tr><td><input type="text" value="Official Website"/></td><td><input type="url" placeholder="https://..."/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>
+            </tbody>
+          </table>
+          <button class="add-row-btn" onclick="addLinkRow()">+ Add Link Row</button>
+        </div>
+
+        <!-- EXTRA NOTES -->
+        <div class="fsec">
+          <div class="fsec-title">📝 Extra Notes (Optional)</div>
+          <textarea id="f-notes" rows="3" placeholder="Additional info: eligibility details, selection process, age relaxation..."></textarea>
+        </div>
+
+        <div class="submit-row">
+          <button class="submit-btn" id="submitBtn" onclick="submitPost()">✅ Publish Post</button>
+          <button class="reset-btn" onclick="resetForm()">✕ Clear</button>
+        </div>
+        <div class="toast toast-ok" id="toastOk"></div>
+        <div class="toast toast-err" id="toastErr"></div>
+      </div>
+    </div>
+
+    <!-- POSTS LIST -->
+    <div class="list-panel">
+      <div class="list-hdr">
+        <h2>All Posts</h2>
+        <span class="count-badge" id="postCount">Loading...</span>
+      </div>
+      <div class="filter-bar">
+        <span class="fpill active" onclick="filterList('all',this)">All</span>
+        <span class="fpill" onclick="filterList('job',this)">💼 Jobs</span>
+        <span class="fpill" onclick="filterList('result',this)">📊 Results</span>
+        <span class="fpill" onclick="filterList('admit',this)">🪪 Admit</span>
+        <span class="fpill" onclick="filterList('answer',this)">🗝️ Answer</span>
+      </div>
+      <div id="postsList"><div class="loading-list"><div class="loader"></div><p>Loading...</p></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  if(sessionStorage.getItem('climax_admin')!=='true') window.location.href='login.html';
+  const ADMIN_HASH=sessionStorage.getItem('climax_hash');
+  const API='/.netlify/functions/posts';
+  let allPosts=[],editingId=null,imgMode='url',uploadedDataUrl=null,listFilter='all';
+
+  function logout(){sessionStorage.clear();window.location.href='login.html';}
+
+  async function loadPosts(){
+    try{
+      const res=await fetch(API);
+      const data=await res.json();
+      allPosts=(data.posts||[]).sort((a,b)=>b.createdAt-a.createdAt);
+      updateStats();renderList();
+    }catch(e){document.getElementById('postsList').innerHTML='<div class="loading-list"><p style="color:#ef4444">Load failed. Check Netlify functions.</p></div>';}
+  }
+
+  function updateStats(){
+    document.getElementById('s-total').textContent=allPosts.length;
+    document.getElementById('s-jobs').textContent=allPosts.filter(p=>p.category==='job').length;
+    document.getElementById('s-results').textContent=allPosts.filter(p=>p.category==='result').length;
+    document.getElementById('s-admits').textContent=allPosts.filter(p=>p.category==='admit').length;
+    document.getElementById('s-others').textContent=allPosts.filter(p=>!['job','result','admit'].includes(p.category)).length;
+  }
+
+  function filterList(cat,el){
+    listFilter=cat;
+    document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));
+    el.classList.add('active');renderList();
+  }
+
+  function renderList(){
+    const list=document.getElementById('postsList');
+    const filtered=listFilter==='all'?allPosts:allPosts.filter(p=>p.category===listFilter);
+    document.getElementById('postCount').textContent=filtered.length+' posts';
+    if(!filtered.length){list.innerHTML='<div class="loading-list"><p>No posts here yet.</p></div>';return;}
+    const icons={job:'💼',result:'📊',admit:'🪪',answer:'🗝️',syllabus:'📚',news:'📰'};
+    list.innerHTML=filtered.map(p=>{
+      const date=p.createdAt?new Date(p.createdAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'';
+      const thumb=p.imageUrl?`<div class="post-thumb"><img src="${p.imageUrl}" onerror="this.parentElement.innerHTML='${icons[p.category]||'📋'}'"/></div>`:`<div class="post-thumb">${icons[p.category]||'📋'}</div>`;
+      return`<div class="post-item">${thumb}<div class="post-info"><div class="post-title-text">${p.title}</div><div class="post-meta-row"><span class="badge badge-${p.category}">${icons[p.category]||'📋'} ${p.category}</span><span class="post-date-text">${date}</span>${p.lastDate?`<span class="post-date-text" style="color:#ef4444">⏰ ${p.lastDate}</span>`:''}</div></div><div class="post-actions"><button class="btn btn-success btn-sm" onclick="editPost('${p.id}')">✏️</button><button class="btn btn-danger btn-sm" onclick="deletePost('${p.id}')">🗑️</button></div></div>`;
+    }).join('');
+  }
+
+  function collectTable(tbodyId){
+    const rows=[];
+    document.querySelectorAll('#'+tbodyId+' tr').forEach(tr=>{
+      const inputs=tr.querySelectorAll('input');
+      const vals=Array.from(inputs).map(i=>i.value.trim());
+      if(vals.some(v=>v)) rows.push(vals);
+    });
+    return rows;
+  }
+
+  async function submitPost(){
+    const title=document.getElementById('f-title').value.trim();
+    const cat=document.getElementById('f-cat').value;
+    const desc=document.getElementById('f-desc').value.trim();
+    const imgUrl=imgMode==='url'?document.getElementById('f-imgurl').value.trim():uploadedDataUrl||'';
+    document.getElementById('toastErr').style.display='none';
+    if(!title){showErr('❌ Title zaroori hai!');return;}
+    if(!cat){showErr('❌ Category select karo!');return;}
+    if(!desc){showErr('❌ Short description zaroori hai!');return;}
+    const btn=document.getElementById('submitBtn');
+    btn.disabled=true;btn.textContent='⏳ Publishing...';
+    const postData={
+      title,category:cat,description:desc,imageUrl:imgUrl,
+      department:document.getElementById('f-dept').value.trim(),
+      lastDate:document.getElementById('f-lastdate').value.trim(),
+      totalPosts:document.getElementById('f-total').value.trim(),
+      postName:document.getElementById('f-postname').value.trim(),
+      salary:document.getElementById('f-salary').value.trim(),
+      ageLimit:document.getElementById('f-age').value.trim(),
+      qualification:document.getElementById('f-qual').value.trim(),
+      examMode:document.getElementById('f-mode').value.trim(),
+      notes:document.getElementById('f-notes').value.trim(),
+      importantDates:collectTable('dateRows'),
+      applicationFee:collectTable('feeRows'),
+      importantLinks:collectTable('linkRows'),
+    };
+    try{
+      let updatedPosts;
+      if(editingId){updatedPosts=allPosts.map(p=>p.id===editingId?{...p,...postData}:p);}
+      else{postData.id=Date.now().toString(36)+Math.random().toString(36).substr(2,5);postData.createdAt=Date.now();updatedPosts=[postData,...allPosts];}
+      await savePosts(updatedPosts);
+      allPosts=updatedPosts;updateStats();renderList();
+      showOk(editingId?'✅ Post updated!':'✅ Post published!');resetForm();
+    }catch(e){showErr('❌ Error: '+e.message);}
+    btn.disabled=false;btn.textContent='✅ Publish Post';
+  }
+
+  async function savePosts(posts){
+    const res=await fetch(API,{method:'PUT',headers:{'Content-Type':'application/json','X-Admin-Hash':ADMIN_HASH},body:JSON.stringify({posts})});
+    if(!res.ok) throw new Error((await res.json()).error||'Save failed');
+  }
+
+  function editPost(id){
+    const p=allPosts.find(x=>x.id===id);if(!p)return;
+    editingId=id;
+    document.getElementById('f-title').value=p.title||'';
+    document.getElementById('f-cat').value=p.category||'';
+    document.getElementById('f-desc').value=p.description||'';
+    document.getElementById('f-dept').value=p.department||'';
+    document.getElementById('f-lastdate').value=p.lastDate||'';
+    document.getElementById('f-total').value=p.totalPosts||'';
+    document.getElementById('f-postname').value=p.postName||'';
+    document.getElementById('f-salary').value=p.salary||'';
+    document.getElementById('f-age').value=p.ageLimit||'';
+    document.getElementById('f-qual').value=p.qualification||'';
+    document.getElementById('f-mode').value=p.examMode||'';
+    document.getElementById('f-notes').value=p.notes||'';
+    document.getElementById('f-imgurl').value=p.imageUrl||'';
+    if(p.imageUrl){const pv=document.getElementById('imgPrev');pv.src=p.imageUrl;pv.style.display='block';}
+    function restoreTable(tbodyId,rows,type2){
+      if(!rows||!rows.length)return;
+      document.getElementById(tbodyId).innerHTML='';
+      rows.forEach(r=>{const tr=document.createElement('tr');tr.innerHTML=`<td><input type="text" value="${(r[0]||'').replace(/"/g,'&quot;')}"/></td><td><input type="${type2||'text'}" value="${(r[1]||'').replace(/"/g,'&quot;')}"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td>`;document.getElementById(tbodyId).appendChild(tr);});
+    }
+    restoreTable('dateRows',p.importantDates,'text');
+    restoreTable('feeRows',p.applicationFee,'text');
+    restoreTable('linkRows',p.importantLinks,'url');
+    document.getElementById('formHeading').textContent='✏️ Edit Post';
+    document.getElementById('formSub').textContent=p.title.substring(0,45)+'...';
+    document.getElementById('editBanner').style.display='block';
+    document.getElementById('submitBtn').textContent='💾 Update Post';
+    document.querySelector('.form-panel').scrollIntoView({behavior:'smooth'});
+  }
+
+  async function deletePost(id){
+    const p=allPosts.find(x=>x.id===id);
+    if(!confirm('🗑️ Delete?\n\n"'+p?.title+'"'))return;
+    try{const updated=allPosts.filter(x=>x.id!==id);await savePosts(updated);allPosts=updated;updateStats();renderList();showOk('🗑️ Deleted.');}
+    catch(e){showErr('❌ Delete failed: '+e.message);}
+  }
+
+  function resetForm(){
+    editingId=null;uploadedDataUrl=null;
+    ['f-title','f-cat','f-desc','f-dept','f-lastdate','f-total','f-postname','f-salary','f-age','f-qual','f-mode','f-notes','f-imgurl'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    document.getElementById('imgPrev').style.display='none';
+    document.getElementById('formHeading').textContent='➕ Add New Post';
+    document.getElementById('formSub').textContent='SarkariResult style — Important Dates, Fee, Links tables';
+    document.getElementById('editBanner').style.display='none';
+    document.getElementById('submitBtn').textContent='✅ Publish Post';
+    document.getElementById('toastOk').style.display='none';
+    document.getElementById('toastErr').style.display='none';
+    document.getElementById('dateRows').innerHTML='<tr><td><input type="text" value="Notification Released"/></td><td><input type="text" placeholder="DD Mon YYYY"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr><tr><td><input type="text" value="Apply Online Start"/></td><td><input type="text" placeholder="DD Mon YYYY"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr><tr><td><input type="text" value="Last Date to Apply"/></td><td><input type="text" placeholder="DD Mon YYYY"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr><tr><td><input type="text" value="Fee Payment Last Date"/></td><td><input type="text" placeholder="DD Mon YYYY"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>';
+    document.getElementById('feeRows').innerHTML='<tr><td><input type="text" value="General / OBC / EWS"/></td><td><input type="text" placeholder="₹500"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr><tr><td><input type="text" value="SC / ST / PwBD / Female"/></td><td><input type="text" placeholder="₹250"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>';
+    document.getElementById('linkRows').innerHTML='<tr><td><input type="text" value="Apply Online"/></td><td><input type="url" placeholder="https://..."/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr><tr><td><input type="text" value="Download Notification"/></td><td><input type="url" placeholder="https://..."/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr><tr><td><input type="text" value="Official Website"/></td><td><input type="url" placeholder="https://..."/></td><td><button class="del-row" onclick="delRow(this)">×</button></td></tr>';
+  }
+
+  function addRow(tbodyId,type2,ph1,ph2){
+    const tbody=document.getElementById(tbodyId);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><input type="text" placeholder="${ph1}"/></td><td><input type="${type2}" placeholder="${ph2}"/></td><td><button class="del-row" onclick="delRow(this)">×</button></td>`;
+    tbody.appendChild(tr);
+  }
+  function addLinkRow(){
+    const tbody=document.getElementById('linkRows');
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td><input type="text" placeholder="Link Label"/></td><td><input type="url" placeholder="https://..."/></td><td><button class="del-row" onclick="delRow(this)">×</button></td>';
+    tbody.appendChild(tr);
+  }
+  function delRow(btn){btn.closest('tr').remove();}
+  function setImgMode(mode){imgMode=mode;document.getElementById('url-mode').style.display=mode==='url'?'block':'none';document.getElementById('upload-mode').style.display=mode==='upload'?'block':'none';document.getElementById('tab-url').classList.toggle('active',mode==='url');document.getElementById('tab-upload').classList.toggle('active',mode==='upload');}
+  function previewUrl(){const url=document.getElementById('f-imgurl').value.trim();const pv=document.getElementById('imgPrev');if(url){pv.src=url;pv.style.display='block';}else{pv.style.display='none';}}
+  function previewFile(){const file=document.getElementById('f-file').files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{uploadedDataUrl=e.target.result;const pv=document.getElementById('imgPrev');pv.src=e.target.result;pv.style.display='block';document.getElementById('uploadTxt').textContent='✅ '+file.name;};reader.readAsDataURL(file);}
+  function showOk(msg){const el=document.getElementById('toastOk');el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',3000);}
+  function showErr(msg){const el=document.getElementById('toastErr');el.textContent=msg;el.style.display='block';}
+
+  loadPosts();
+</script>
+</body>
+</html>
