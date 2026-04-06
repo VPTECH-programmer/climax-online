@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Climax Online – Latest Govt Jobs & Results | Rewa</title>
+  <meta name="description" content="Latest government job notifications, results, admit cards and vacancy news for Rewa and MP region.">
+  <meta property="og:title" content="Climax Online – Latest Govt Jobs & Results">
+  <meta property="og:description" content="Latest Sarkari job notifications, results and admit cards from Rewa, MP.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-top-bar">
+      <span>📍 Rewa, Madhya Pradesh &nbsp;|&nbsp; MP Online Service Center</span>
+      <span id="live-time"></span>
+    </div>
+    <div class="header-main container">
+      <div class="logo">
+        <div class="logo-icon">C</div>
+        <div class="logo-text">
+          <span class="logo-name">Climax Online</span>
+          <span class="logo-tagline">Govt Jobs • Results • Admit Cards</span>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <a href="#" onclick="filterPosts('all')" class="nav-link active" id="nav-all">All Posts</a>
+        <a href="#" onclick="filterPosts('job')" class="nav-link" id="nav-job">Latest Jobs</a>
+        <a href="#" onclick="filterPosts('result')" class="nav-link" id="nav-result">Results</a>
+        <a href="#" onclick="filterPosts('admit')" class="nav-link" id="nav-admit">Admit Card</a>
+        <a href="#" onclick="filterPosts('answer')" class="nav-link" id="nav-answer">Answer Key</a>
+        <a href="admin/login.html" class="nav-link admin-link">Admin</a>
+      </nav>
+      <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#" onclick="filterPosts('all');toggleMenu()">All Posts</a>
+      <a href="#" onclick="filterPosts('job');toggleMenu()">Latest Jobs</a>
+      <a href="#" onclick="filterPosts('result');toggleMenu()">Results</a>
+      <a href="#" onclick="filterPosts('admit');toggleMenu()">Admit Card</a>
+      <a href="#" onclick="filterPosts('answer');toggleMenu()">Answer Key</a>
+      <a href="admin/login.html">Admin</a>
+    </div>
+  </header>
+
+  <div class="ticker-wrap">
+    <div class="ticker-label">🔴 LIVE</div>
+    <div class="ticker-content">
+      <div class="ticker-inner" id="tickerInner">Loading latest updates...</div>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title">सरकारी नौकरी की<br><span>हर Update यहाँ!</span></h1>
+      <p class="hero-sub">Latest Govt Job Notifications, Results & Admit Cards — all in one place. Share instantly on WhatsApp.</p>
+      <div class="hero-search">
+        <input type="text" id="searchInput" placeholder="Search jobs, results, exams..." oninput="searchPosts()"/>
+        <button onclick="searchPosts()">🔍 Search</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span id="statTotal">0</span><label>Total Posts</label></div>
+        <div class="stat"><span id="statJobs">0</span><label>Jobs</label></div>
+        <div class="stat"><span id="statResults">0</span><label>Results</label></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="category-bar container">
+    <button class="pill active" onclick="filterPosts('all')" id="pill-all">📋 All</button>
+    <button class="pill" onclick="filterPosts('job')" id="pill-job">💼 Latest Jobs</button>
+    <button class="pill" onclick="filterPosts('result')" id="pill-result">📊 Results</button>
+    <button class="pill" onclick="filterPosts('admit')" id="pill-admit">🪪 Admit Card</button>
+    <button class="pill" onclick="filterPosts('answer')" id="pill-answer">🗝️ Answer Key</button>
+    <button class="pill" onclick="filterPosts('syllabus')" id="pill-syllabus">📚 Syllabus</button>
+  </div>
+
+  <main class="container main-layout">
+    <section class="posts-section">
+      <div class="section-header">
+        <h2 id="sectionTitle">Latest Updates</h2>
+        <span id="postCount" class="post-count"></span>
+      </div>
+      <div class="posts-grid" id="postsGrid">
+        <div class="loading-state"><div class="loader"></div><p>Loading posts...</p></div>
+      </div>
+      <div id="noResults" class="no-results" style="display:none;">
+        <div class="no-results-icon">🔍</div>
+        <h3>No posts found</h3>
+        <p>Try a different category or search term.</p>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <div class="sidebar-widget">
+        <h3 class="widget-title">📌 Quick Links</h3>
+        <ul class="quick-links">
+          <li><a href="https://www.mponline.gov.in" target="_blank">MP Online Portal</a></li>
+          <li><a href="https://www.mpesb.mp.gov.in" target="_blank">MPESB Official</a></li>
+          <li><a href="https://www.sarkariresult.com" target="_blank">Sarkari Result</a></li>
+          <li><a href="https://www.nta.ac.in" target="_blank">NTA Official</a></li>
+          <li><a href="https://www.ssc.nic.in" target="_blank">SSC Official</a></li>
+          <li><a href="https://www.upsc.gov.in" target="_blank">UPSC Official</a></li>
+          <li><a href="https://www.rrbcdg.gov.in" target="_blank">Railway RRB</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-widget whatsapp-widget">
+        <h3 class="widget-title">📲 Join WhatsApp</h3>
+        <p>Get instant job alerts on WhatsApp!</p>
+        <a href="https://wa.me/917999999999" target="_blank" class="wa-join-btn">Join Now →</a>
+      </div>
+      <div class="sidebar-widget">
+        <h3 class="widget-title">🔥 Popular Categories</h3>
+        <div class="tag-cloud">
+          <span class="tag" onclick="filterPosts('job')">SSC</span>
+          <span class="tag" onclick="filterPosts('job')">Railway</span>
+          <span class="tag" onclick="filterPosts('job')">Army</span>
+          <span class="tag" onclick="filterPosts('result')">Results</span>
+          <span class="tag" onclick="filterPosts('admit')">Admit Card</span>
+          <span class="tag" onclick="filterPosts('job')">Banking</span>
+          <span class="tag" onclick="filterPosts('job')">MPESB</span>
+          <span class="tag" onclick="filterPosts('job')">UPSC</span>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-logo">Climax Online</div>
+        <p class="footer-desc">Your trusted source for Government Job Updates in Rewa, MP. MP Online Authorized Service Center.</p>
+        <p style="margin-top:8px;font-size:12px;color:#94a3b8;">📍 Rewa, Madhya Pradesh</p>
+      </div>
+      <div>
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="#" onclick="filterPosts('job')">Latest Jobs</a></li>
+          <li><a href="#" onclick="filterPosts('result')">Results</a></li>
+          <li><a href="#" onclick="filterPosts('admit')">Admit Cards</a></li>
+          <li><a href="#" onclick="filterPosts('answer')">Answer Keys</a></li>
+          <li><a href="#" onclick="filterPosts('syllabus')">Syllabus</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Important Links</h4>
+        <ul>
+          <li><a href="https://www.mponline.gov.in" target="_blank">MP Online</a></li>
+          <li><a href="https://www.mpesb.mp.gov.in" target="_blank">MPESB</a></li>
+          <li><a href="https://www.nta.ac.in" target="_blank">NTA</a></li>
+          <li><a href="admin/login.html">Admin Login</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Climax Online, Rewa. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login — Climax Online</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#0f172a,#1a3a6b);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:#fff;border-radius:20px;padding:44px 40px;width:100%;max-width:400px;box-shadow:0 24px 60px rgba(0,0,0,0.4)}
+    .logo-wrap{text-align:center;margin-bottom:32px}
+    .logo-icon{width:64px;height:64px;background:linear-gradient(135deg,#2563eb,#60a5fa);border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:32px;color:#fff;margin:0 auto 14px;box-shadow:0 8px 24px rgba(37,99,235,0.4)}
+    h1{font-family:'DM Serif Display',serif;font-size:22px;color:#0f172a;margin-bottom:4px}
+    .sub{font-size:13px;color:#94a3b8}
+    .group{margin-bottom:16px}
+    label{display:block;font-size:12px;font-weight:600;color:#475569;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.4px}
+    input{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;transition:border 0.2s;font-family:'DM Sans',sans-serif}
+    input:focus{border-color:#2563eb}
+    .btn{width:100%;padding:14px;background:#2563eb;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px;transition:background 0.2s}
+    .btn:hover{background:#1d4ed8}
+    .btn:disabled{background:#94a3b8;cursor:not-allowed}
+    .err{background:#fef2f2;color:#ef4444;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;font-size:13px;margin-top:12px;display:none}
+    .back{display:block;text-align:center;margin-top:18px;color:#2563eb;font-size:13px;text-decoration:none;font-weight:500}
+    .back:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo-wrap">
+      <div class="logo-icon">C</div>
+      <h1>Climax Online</h1>
+      <p class="sub">Admin Panel — Authorized Access Only</p>
+    </div>
+    <div class="group">
+      <label>Admin Password</label>
+      <input type="password" id="pwd" placeholder="Enter your admin password"
+             onkeydown="if(event.key==='Enter') login()"/>
+    </div>
+    <button class="btn" id="loginBtn" onclick="login()">🔐 Login to Admin</button>
+    <div class="err" id="err">❌ Wrong password. Try again.</div>
+    <a href="../index.html" class="back">← Back to Main Site</a>
+  </div>
+
+  <script>
+    // Already logged in?
+    if (sessionStorage.getItem('climax_admin') === 'true') {
+      window.location.href = 'dashboard.html';
+    }
+
+    async function hashPassword(password) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+
+    async function login() {
+      const pwd = document.getElementById('pwd').value;
+      const btn = document.getElementById('loginBtn');
+      const err = document.getElementById('err');
+      if (!pwd) return;
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Verifying...';
+      err.style.display = 'none';
+
+      try {
+        const hash = await hashPassword(pwd);
+
+        // Verify on server — hash never stored in browser files
+        const res = await fetch('/.netlify/functions/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ hash })
+        });
+        const data = await res.json();
+
+        if (data.valid) {
+          // Store hash in session for admin API calls
+          sessionStorage.setItem('climax_admin', 'true');
+          sessionStorage.setItem('climax_hash', hash);
+          window.location.href = 'dashboard.html';
+        } else {
+          err.style.display = 'block';
+          document.getElementById('pwd').value = '';
+          document.getElementById('pwd').focus();
+        }
+      } catch (e) {
+        err.textContent = '❌ Server error. Try again.';
+        err.style.display = 'block';
+      }
+
+      btn.disabled = false;
+      btn.textContent = '🔐 Login to Admin';
+    }
+  </script>
+</body>
+</html>
